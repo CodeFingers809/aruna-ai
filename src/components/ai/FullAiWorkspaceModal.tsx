@@ -98,6 +98,7 @@ export function FullAiWorkspaceModal({
   );
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [showScrollBottom, setShowScrollBottom] = useState(false);
+  const [isChartPaneVisible, setIsChartPaneVisible] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -318,6 +319,15 @@ export function FullAiWorkspaceModal({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsChartPaneVisible((prev) => !prev)}
+            className="text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-800 hidden sm:flex items-center gap-1.5 transition-colors"
+            title={isChartPaneVisible ? "Expand conversation to full width (Focus Mode)" : "Show Kundli chakra side panel"}
+          >
+            <Compass size={14} className={isChartPaneVisible ? "text-cyan-400" : "text-slate-400"} />
+            <span>{isChartPaneVisible ? "Full Width (Focus)" : "Show Kundli Chart"}</span>
+          </button>
+
           {chatMessages.length > 0 && (
             <button
               onClick={clearChat}
@@ -346,7 +356,13 @@ export function FullAiWorkspaceModal({
         {/* ============================================================== */}
         {/* LEFT PANE: MULTI-TURN CONVERSATIONAL CHAT INTERFACE            */}
         {/* ============================================================== */}
-        <section className="w-full lg:w-[70%] h-full flex flex-col bg-slate-950 border-r border-slate-800/80 overflow-hidden relative">
+        <section
+          className={`w-full ${
+            isChartPaneVisible ? 'lg:w-[72%]' : 'lg:w-full'
+          } h-full flex flex-col bg-slate-950 ${
+            isChartPaneVisible ? 'border-r border-slate-800/80' : ''
+          } overflow-hidden relative transition-all duration-200`}
+        >
           {/* AI Chart Spotlight Bar */}
           {activeSpotlightKeys.length > 0 ? (
             <div className="p-2 sm:px-4 bg-slate-950/90 border-b border-cyan-900/60 flex items-center justify-between gap-2 overflow-x-auto flex-shrink-0 text-xs z-10">
@@ -402,6 +418,7 @@ export function FullAiWorkspaceModal({
             onScroll={handleScroll}
             className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6"
           >
+            <div className={`w-full ${isChartPaneVisible ? 'max-w-5xl' : 'max-w-6xl'} mx-auto space-y-6`}>
             {/* Empty State: Prompt Starter */}
             {chatMessages.length === 0 && !isLoading && !currentError && (
               <div className="max-w-2xl mx-auto py-12 sm:py-16 text-center space-y-5 animate-in fade-in duration-300">
@@ -462,7 +479,7 @@ export function FullAiWorkspaceModal({
                       <span>•</span>
                       <span>{formatTime(msg.timestamp)}</span>
                     </div>
-                    <div className="bg-slate-900/90 border border-cyan-800/70 text-slate-100 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] sm:max-w-[75%] shadow-md text-xs sm:text-sm leading-relaxed whitespace-pre-wrap select-text">
+                    <div className="bg-slate-900/90 border border-cyan-800/70 text-slate-100 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[88%] sm:max-w-[80%] shadow-md text-xs sm:text-sm leading-relaxed whitespace-pre-wrap select-text">
                       {msg.content}
                     </div>
                   </div>
@@ -475,7 +492,7 @@ export function FullAiWorkspaceModal({
                   key={msg.id}
                   className="flex flex-col items-start space-y-2 animate-in fade-in duration-200 w-full"
                 >
-                  <div className="flex items-center justify-between w-full max-w-[96%] px-1 text-xs text-slate-400">
+                  <div className="flex items-center justify-between w-full px-1 text-xs text-slate-400">
                     <div className="flex items-center gap-2">
                       <div className="w-5 h-5 rounded-md bg-cyan-950 border border-cyan-800 flex items-center justify-center text-cyan-300 shadow-sm">
                         <Sparkle size={12} weight="fill" />
@@ -530,7 +547,7 @@ export function FullAiWorkspaceModal({
                     </div>
                   </div>
 
-                  <div className="bg-slate-900/60 border border-slate-800/90 rounded-2xl rounded-tl-sm p-4 sm:p-6 w-full max-w-[96%] shadow-lg space-y-3 select-text">
+                  <div className="bg-slate-900/60 border border-slate-800/90 rounded-2xl rounded-tl-sm p-4 sm:p-6 w-full shadow-lg space-y-3 select-text">
                     <MarkdownRenderer content={cleanMessageText(msg.content)} />
                   </div>
                 </div>
@@ -539,7 +556,7 @@ export function FullAiWorkspaceModal({
 
             {/* Active Thinking / Synthesis Bubble */}
             {isLoading && (
-              <div className="flex flex-col items-start space-y-2 max-w-[96%] animate-in fade-in duration-300">
+              <div className="flex flex-col items-start space-y-2 w-full animate-in fade-in duration-300">
                 <div className="flex items-center gap-2 text-xs text-cyan-300 px-1">
                   <div className="w-5 h-5 rounded-md bg-cyan-950 border border-cyan-800 flex items-center justify-center text-cyan-300">
                     <Sparkle size={12} className="animate-spin text-cyan-400" />
@@ -578,6 +595,7 @@ export function FullAiWorkspaceModal({
 
             <div ref={messagesEndRef} />
           </div>
+          </div>
 
           {/* Floating Scroll to Bottom Button */}
           {showScrollBottom && (
@@ -591,27 +609,29 @@ export function FullAiWorkspaceModal({
           )}
 
           {/* Quick Follow-up Chips Row (above input) */}
-          <div className="p-2 sm:px-4 bg-slate-900/50 border-t border-slate-800/60 flex items-center gap-2 overflow-x-auto flex-shrink-0 z-10">
-            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex-shrink-0">
-              Follow-ups:
-            </span>
-            <div className="flex items-center gap-1.5 flex-nowrap">
-              {currentQueries.map((q, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendMessage(q)}
-                  disabled={isLoading}
-                  className="px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-cyan-200 text-[10.5px] transition-colors whitespace-nowrap flex-shrink-0 disabled:opacity-40"
-                >
-                  {q}
-                </button>
-              ))}
+          <div className="p-2 sm:px-4 bg-slate-900/50 border-t border-slate-800/60 overflow-x-auto flex-shrink-0 z-10">
+            <div className={`w-full ${isChartPaneVisible ? 'max-w-5xl' : 'max-w-6xl'} mx-auto flex items-center gap-2`}>
+              <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider flex-shrink-0">
+                Follow-ups:
+              </span>
+              <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
+                {currentQueries.map((q, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSendMessage(q)}
+                    disabled={isLoading}
+                    className="px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-cyan-200 text-[10.5px] transition-colors whitespace-nowrap flex-shrink-0 disabled:opacity-40"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Bottom Interactive Query Bar with Multi-line Textarea */}
           <div className="p-3 sm:p-4 bg-slate-950 border-t border-slate-800/80 flex-shrink-0 z-10">
-            <div className="max-w-4xl mx-auto flex items-end gap-2">
+            <div className={`w-full ${isChartPaneVisible ? 'max-w-5xl' : 'max-w-6xl'} mx-auto flex items-end gap-2`}>
               <div className="flex-1 bg-slate-900 border border-slate-800 focus-within:border-cyan-500 rounded-xl transition-colors overflow-hidden">
                 <textarea
                   ref={textareaRef}
@@ -639,9 +659,10 @@ export function FullAiWorkspaceModal({
         </section>
 
         {/* ============================================================== */}
-        {/* RIGHT PANE: 30% INTERACTIVE CHART & PLANETARY TELEMETRY ONLY   */}
+        {/* RIGHT PANE: INTERACTIVE CHART & PLANETARY TELEMETRY            */}
         {/* ============================================================== */}
-        <section className="w-full lg:w-[30%] h-full flex flex-col bg-slate-900/70 p-4 overflow-y-auto space-y-4 flex-shrink-0">
+        {isChartPaneVisible && (
+          <section className="w-full lg:w-[28%] h-full flex flex-col bg-slate-900/70 p-4 overflow-y-auto space-y-4 flex-shrink-0 animate-in fade-in duration-200">
           {/* Header */}
           <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
             <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
@@ -802,6 +823,7 @@ export function FullAiWorkspaceModal({
             </div>
           </div>
         </section>
+        )}
       </div>
     </div>
   );

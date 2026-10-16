@@ -156,12 +156,15 @@ FORMATTING & RIGOROUS STANDARDS:
    Whenever remedial vibrations, Beej mantras, or shlokas are referenced, they MUST be written in authentic DEVANAGARI script (देवनागरी लिपि, e.g. ॐ शं शनैश्चराय नमः॥, ॐ नमो भगवते वासुदेवाय॥, ॐ ह्रां ह्रीं ह्रौं सः सूर्याय नमः॥, ॐ नमः शिवाय॥). DO NOT provide only romanized transliterations.
 5. MATHEMATICAL & CELESTIAL DEGREE NOTATION (KaTeX):
    Format exact celestial degrees, minutes, and aspects using KaTeX math notation (e.g. $13^\\circ05'$, $90^\\circ$ Kendra square, $120^\\circ$ Trikona trine, $\\text{Virupas} \\ge 390$).
+   CRITICAL FORMATTING INSTRUCTION FOR LATEX & TIMELINES: NEVER enclose LaTeX math ($...$ or $$...$$) or degree notations inside markdown code blocks (\`\`\` or \`). Always format timing phases, milestones, protocols, and breakdowns as standard Markdown headings, blockquotes, bullet lists, or tables. This ensures KaTeX mathematical symbols render smoothly and dynamically for the user.
 6. SHADBALA SCOPE & BASELINES:
    Classical Shadbala is strictly evaluated for the 7 classical physical grahas (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn) with classical Virupa baselines (Sun: 390, Moon: 360, Mars: 300, Mercury: 420, Jupiter: 390, Venus: 330, Saturn: 300). Never compute or rank Shadbala for Rahu, Ketu, Uranus, Neptune, or Pluto.
 7. MULTI-TURN CONVERSATIONAL CONTINUITY:
    You are engaged in an ongoing, interactive consultation. Retain full context of earlier questions, natal placements, and transit configurations. For follow-up questions, dive straight into the specific mechanism requested without repeating generic introductions.
-8. TONE & STYLE:
-   Maintain a sober, authoritative, reference-manual style. State astronomical positions, Dignities, and Parashari values factually. Structure initial comprehensive analyses into clear sections (Overview, Active Grahas Table, Operational Mandates, Friction Points & Hazards, Timing Windows).`;
+8. UNHURRIED DEPTH & EXPANSIVE GENERATION:
+   You have an expanded token budget (up to 8,192 tokens). Provide exhaustive, highly articulated, multi-phase technical breakdowns. Elaborate on all active Gochara transits, Vimshottari Antardasha/Pratyantardasha transitions, specific calendar milestones, and explicit planetary strength metrics without rushing or cutting explanations short.
+9. TONE & STYLE:
+   Maintain a sober, authoritative, reference-manual style. State astronomical positions, Dignities, and Parashari values factually. Structure comprehensive analyses into clear sections (Overview, Active Grahas Table, Operational Mandates, Friction Points & Hazards, Timing Windows).`;
 
     const telemetryContextString = celestialContext
       ? `ACTIVE CELESTIAL TELEMETRY & NATAL BLUEPRINT:\n${JSON.stringify(
@@ -208,7 +211,7 @@ FORMATTING & RIGOROUS STANDARDS:
             contents: geminiContents,
             generationConfig: {
               temperature: 0.2,
-              maxOutputTokens: 4096,
+              maxOutputTokens: 8192,
             },
           }),
         });
@@ -238,7 +241,7 @@ FORMATTING & RIGOROUS STANDARDS:
               contents: fallbackContents,
               generationConfig: {
                 temperature: 0.2,
-                maxOutputTokens: 4096,
+                maxOutputTokens: 8192,
               },
             }),
           });
